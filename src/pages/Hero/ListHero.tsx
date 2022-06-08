@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  Flex,
   VStack,
   Divider,
   chakra,
@@ -62,17 +63,17 @@ const ListHero = () => {
   };
 
   return (
-    <Box as={Container} maxW="7xl" mt={4} p={4}>
+    <Box as={Container} maxW="container.lg" mt={4} p={4}>
       <Grid
         templateColumns={{
           base: "repeat(1, 1fr)",
-          sm: "repeat(2, 1fr)",
-          md: "repeat(2, 1fr)",
+          sm: "repeat(3, 1fr)",
+          md: "repeat(3, 1fr)",
         }}
         gap={4}
       >
-        <GridItem colSpan={1}>
-          <VStack alignItems="flex-start" spacing="20px">
+        <GridItem colSpan={{ base: 1, sm: 2, md: 1 }}>
+          <VStack alignItems="flex-start" spacing="10px">
             <chakra.h2 fontSize="3xl" fontWeight="700">
               Hero
             </chakra.h2>
@@ -82,6 +83,14 @@ const ListHero = () => {
               </Button>
             </Link>
           </VStack>
+        </GridItem>
+        <GridItem colSpan={2}>
+          <Flex flexDirection={"column"}>
+            <Text fontSize={"4xl"} fontWeight={"bold"}>
+              {heroes.length}
+            </Text>
+            <Box fontSize={"xl"}>Heroes on Database</Box>
+          </Flex>
         </GridItem>
       </Grid>
       <Divider mt={2} mb={2} />
