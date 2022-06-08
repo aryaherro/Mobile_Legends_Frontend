@@ -10,7 +10,7 @@ export default function Home() {
         <Link
           color="teal.500"
           fontSize="2xl"
-          href="http//reactjs.org/"
+          href="http://reactjs.org/"
           target="_blank"
         >
           React
@@ -19,7 +19,7 @@ export default function Home() {
         <Link
           color="teal.500"
           fontSize="2xl"
-          href="https://chakra-ui.com/"
+          href="http://chakra-ui.com/"
           target="_blank"
         >
           Chakra UI
@@ -28,7 +28,7 @@ export default function Home() {
         <Link
           color="teal.500"
           fontSize="2xl"
-          href="http://google.com/search?q=react"
+          href="http://google.com/"
           target="_blank"
         >
           google's

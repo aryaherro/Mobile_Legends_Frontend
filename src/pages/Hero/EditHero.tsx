@@ -23,12 +23,14 @@ import {
   Center,
   InputGroup,
   useToast,
+  Tooltip,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { FiFile } from "react-icons/fi";
 
 function EditHero() {
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const [mounted] = useState(false);
   const [hero, setHero] = useState({
     name: "",
     release: "2016",
@@ -68,11 +70,11 @@ function EditHero() {
   }
 
   useEffect(() => {
-    if (allRoles.length === 0) {
+    if (!mounted) {
       getRoles();
       getHero();
     }
-  }, []);
+  }, [mounted]);
 
   const loadImage = (e: any) => {
     try {
@@ -88,6 +90,7 @@ function EditHero() {
     formData.append("name", hero.name);
     formData.append("release", hero.release);
     formData.append("roles", JSON.stringify(hero.roles));
+    console.log(hero.deleted_image);
     formData.append("deleted_image", hero.deleted_image.toString());
     try {
       await axios.patch(`http://localhost:9000/hero/${id}`, formData, {
@@ -126,7 +129,7 @@ function EditHero() {
         my={12}
       >
         <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-          Add hero
+          Edit Hero
         </Heading>
         <FormControl id="picture" isRequired>
           <Stack direction={["column", "row"]} spacing={6}>
@@ -179,10 +182,12 @@ function EditHero() {
         <FormControl id="name" isRequired>
           <FormLabel>name</FormLabel>
           <Input
+            required={true}
             placeholder="Name"
             _placeholder={{ color: "gray.500" }}
             type="text"
-            defaultValue={hero.name}
+            // defaultValue={hero.name}
+            value={hero.name}
             onChange={(e) => setHero({ ...hero, name: e.target.value })}
           />
         </FormControl>
@@ -234,17 +239,25 @@ function EditHero() {
           >
             Cancel
           </Button>
-          <Button
-            bg={"blue.400"}
-            color={"white"}
-            w="full"
-            _hover={{
-              bg: "blue.500",
-            }}
-            onClick={saveHero}
+          <Tooltip
+            hasArrow
+            label="Nama Hero tidak boleh kosong"
+            shouldWrapChildren
+            isDisabled={hero.name !== ""}
           >
-            Submit
-          </Button>
+            <Button
+              isDisabled={hero.name === ""}
+              bg={"blue.400"}
+              color={"white"}
+              w="full"
+              _hover={{
+                bg: "blue.500",
+              }}
+              onClick={saveHero}
+            >
+              Submit
+            </Button>
+          </Tooltip>
         </Stack>
       </Stack>
     </Flex>

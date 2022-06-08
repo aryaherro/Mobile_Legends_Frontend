@@ -17,12 +17,15 @@ import {
   Center,
   InputGroup,
   useToast,
+  Tooltip,
+  Text,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { FiFile } from "react-icons/fi";
 
 function EditRole() {
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const [mounted] = useState(false);
   const [role, setRole] = useState({
     name: "",
     file: "",
@@ -43,8 +46,8 @@ function EditRole() {
     });
   }
   useEffect(() => {
-    if (!role.name) getRole();
-  });
+    if (!mounted) getRole();
+  }, [mounted]);
 
   const loadImage = (e: any) => {
     try {
@@ -100,7 +103,7 @@ function EditRole() {
         my={12}
       >
         <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-          Add Role
+          Edit Role
         </Heading>
         <FormControl id="picture" isRequired>
           <Stack direction={["column", "row"]} spacing={6}>
@@ -153,10 +156,12 @@ function EditRole() {
         <FormControl id="name" isRequired>
           <FormLabel>name</FormLabel>
           <Input
+            required={true}
             placeholder="Name"
             _placeholder={{ color: "gray.500" }}
             type="text"
-            defaultValue={role.name}
+            // defaultValue={role.name}
+            value={role.name}
             onChange={(e) => setRole({ ...role, name: e.target.value })}
           />
         </FormControl>
@@ -172,17 +177,25 @@ function EditRole() {
           >
             Cancel
           </Button>
-          <Button
-            bg={"blue.400"}
-            color={"white"}
-            w="full"
-            _hover={{
-              bg: "blue.500",
-            }}
-            onClick={saveRole}
+          <Tooltip
+            hasArrow
+            label="Nama Role tidak boleh kosong"
+            shouldWrapChildren
+            isDisabled={role.name !== ""}
           >
-            Submit
-          </Button>
+            <Button
+              isDisabled={role.name === ""}
+              bg={"blue.400"}
+              color={"white"}
+              w="full"
+              _hover={{
+                bg: "blue.500",
+              }}
+              onClick={saveRole}
+            >
+              Submit
+            </Button>
+          </Tooltip>
         </Stack>
       </Stack>
     </Flex>

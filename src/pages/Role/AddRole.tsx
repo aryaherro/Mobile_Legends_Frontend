@@ -17,28 +17,30 @@ import {
   Center,
   InputGroup,
   useToast,
+  Tooltip,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { FiFile } from "react-icons/fi";
 
 function AddRole() {
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const [name, setName] = useState("");
-  const [file, setFile] = useState("");
-  const [preview, setPreview] = useState("");
+  const [role, setRole] = useState({
+    name: "",
+    file: "",
+    preview: "",
+  });
   const navigate = useNavigate();
   const toast = useToast();
 
   const loadImage = (e: any) => {
     const image = e.target.files[0];
-    setFile(image);
-    setPreview(URL.createObjectURL(image));
+    setRole({ ...role, file: image, preview: URL.createObjectURL(image) });
   };
   const saveRole = async (e: any) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("name", name);
+    formData.append("file", role.file);
+    formData.append("name", role.name);
     try {
       await axios.post("http://localhost:9000/role", formData, {
         headers: {
@@ -46,7 +48,7 @@ function AddRole() {
         },
       });
       toast({
-        title: `Role "${name}" has been added`,
+        title: `Role "${role.name}" has been added`,
         status: "success",
         isClosable: true,
         position: "top-right",
@@ -83,10 +85,10 @@ function AddRole() {
             <Center w="full">
               <Avatar
                 size="2xl"
-                src={preview}
-                name={preview === "" ? name : ""}
+                src={role.preview}
+                name={role.preview === "" ? role.name : ""}
               >
-                {preview !== "" ? (
+                {role.preview !== "" ? (
                   <AvatarBadge
                     as={IconButton}
                     size="sm"
@@ -95,10 +97,13 @@ function AddRole() {
                     colorScheme="red"
                     aria-label="remove Image"
                     icon={<SmallCloseIcon />}
-                    onClick={() => {
-                      setPreview("");
-                      setFile("");
-                    }}
+                    onClick={() =>
+                      setRole({
+                        ...role,
+                        preview: "",
+                        file: "",
+                      })
+                    }
                   />
                 ) : null}
               </Avatar>
@@ -126,18 +131,23 @@ function AddRole() {
         <FormControl id="name" isRequired>
           <FormLabel>name</FormLabel>
           <Input
+            required={true}
             placeholder="Name"
             _placeholder={{ color: "gray.500" }}
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={role.name}
+            onChange={(e) => setRole({ ...role, name: e.target.value })}
           />
         </FormControl>
-        <Stack spacing={6} direction={["column", "row"]}>
+        <Stack
+          spacing={6}
+          direction={["column", "row"]}
+          justify={"space-between"}
+        >
           <Button
             bg={"red.400"}
             color={"white"}
-            w="full"
+            w="sm"
             _hover={{
               bg: "red.500",
             }}
@@ -145,17 +155,25 @@ function AddRole() {
           >
             Cancel
           </Button>
-          <Button
-            bg={"blue.400"}
-            color={"white"}
-            w="full"
-            _hover={{
-              bg: "blue.500",
-            }}
-            onClick={saveRole}
+          <Tooltip
+            hasArrow
+            label="Nama Role tidak boleh kosong"
+            shouldWrapChildren
+            isDisabled={role.name !== ""}
           >
-            Submit
-          </Button>
+            <Button
+              isDisabled={role.name === ""}
+              bg={"blue.400"}
+              color={"white"}
+              w="unset"
+              _hover={{
+                bg: "blue.500",
+              }}
+              onClick={saveRole}
+            >
+              Submit
+            </Button>
+          </Tooltip>
         </Stack>
       </Stack>
     </Flex>

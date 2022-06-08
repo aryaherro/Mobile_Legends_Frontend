@@ -22,6 +22,7 @@ import {
   InputGroup,
   Icon,
   useToast,
+  Tooltip,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { FiFile } from "react-icons/fi";
@@ -149,6 +150,7 @@ function AddHero() {
         <FormControl id="name" isRequired>
           <FormLabel>name</FormLabel>
           <Input
+            required={true}
             placeholder="Name"
             _placeholder={{ color: "gray.500" }}
             type="text"
@@ -196,17 +198,25 @@ function AddHero() {
           >
             Cancel
           </Button>
-          <Button
-            bg={"blue.400"}
-            color={"white"}
-            w="full"
-            _hover={{
-              bg: "blue.500",
-            }}
-            onClick={saveHero}
+          <Tooltip
+            hasArrow
+            label="Nama Hero tidak boleh kosong"
+            shouldWrapChildren
+            isDisabled={hero.name !== ""}
           >
-            Submit
-          </Button>
+            <Button
+              isDisabled={hero.name === ""}
+              bg={"blue.400"}
+              color={"white"}
+              w="full"
+              _hover={{
+                bg: "blue.500",
+              }}
+              onClick={saveHero}
+            >
+              Submit
+            </Button>
+          </Tooltip>
         </Stack>
       </Stack>
     </Flex>
